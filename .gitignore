@@ -12,6 +12,10 @@ dist
 dist-ssr
 *.local
 
+# Animation frames (bundled by Vite at build time, not pushed to repo)
+src/assets/frames/
+public/keyboard/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

@@ -73,38 +73,6 @@ body {
     animation: border-shift 4s ease infinite;
 }
 
-/* Typing code background */
-.code-terminal {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    filter: blur(10px);
-    opacity: 0.35;
-    overflow: hidden;
-}
-
-.code-text {
-    font-family: "Fira Code", "JetBrains Mono", "Cascadia Code", monospace;
-    font-size: clamp(14px, 1.8vw, 22px);
-    line-height: 1.7;
-    white-space: pre;
-    margin: 0;
-    padding: 3rem;
-    color: #d4d4d4;
-}
-
-.code-cursor {
-    display: inline-block;
-    width: 2px;
-    height: 1.2em;
-    background: #22c55e;
-    box-shadow: 0 0 8px #22c55e, 0 0 20px rgba(34, 197, 94, 0.4);
-    vertical-align: text-bottom;
-    margin-left: 1px;
-}
-
 /* Syntax colors */
 .code-kw { color: #569cd6; }
 .code-tp { color: #4ec9b0; }
@@ -114,4 +82,3 @@ body {
 .code-cm { color: #6a9955; }
 .code-an { color: #dcdcaa; }
 .code-pl { color: #d4d4d4; }
-
