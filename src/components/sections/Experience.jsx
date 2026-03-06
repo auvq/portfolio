@@ -1,9 +1,7 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
-import { Copy, Check, ExternalLink, Users } from "lucide-react";
+import { Copy, Check, ExternalLink, Users, ArrowUpRight } from "lucide-react";
 import { FaDiscord } from "react-icons/fa";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import pokehubImg from "../../assets/pokehub.png";
 import tavernmcImg from "../../assets/tavernmc.png";
@@ -11,8 +9,6 @@ import archImg from "../../assets/arch.png";
 import minefruitImg from "../../assets/minefruit.png";
 import minerancherImg from "../../assets/minerancher.png";
 import hyclashImg from "../../assets/hyclash.png";
-
-gsap.registerPlugin(ScrollTrigger);
 
 const experiences = [
     {
@@ -27,6 +23,7 @@ const experiences = [
         website: "https://hyclash.com",
         ip: "play.hyclash.com",
         ongoing: true,
+        featured: true,
     },
     {
         title: "ArchMC",
@@ -58,7 +55,7 @@ const experiences = [
         description: "One of the largest MMO and survival Minecraft servers. Focused on player gameplay more than any other server.",
         startDate: "Aug '24",
         endDate: "Feb '25",
-        players: "~350 concurrent",
+        players: "~350 avg",
         image: tavernmcImg,
         link: "https://discord.gg/tavernmc",
         ip: "play.tavernmc.net",
@@ -81,7 +78,7 @@ const experiences = [
         description: "Incredible server with unique concepts, always looked forward to expanding and creating new gamemodes.",
         startDate: "Nov '22",
         endDate: "Apr '24",
-        players: "~250 concurrent",
+        players: "~250 avg",
         image: minefruitImg,
         link: "https://discord.gg/minefruit",
         ip: "play.minefruit.org",
@@ -102,196 +99,213 @@ const experiences = [
 
 function CopyIPButton({ ip, offline }) {
     const [copied, setCopied] = useState(false);
-
     if (!ip) return null;
-
-    const handleCopy = () => {
-        navigator.clipboard.writeText(ip);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
-    };
 
     return (
         <button
-            onClick={handleCopy}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer hover:bg-white/5 hover:border-[var(--color-border-hover)]"
+            onClick={() => {
+                navigator.clipboard.writeText(ip);
+                setCopied(true);
+                setTimeout(() => setCopied(false), 2000);
+            }}
+            className="project-link-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium cursor-pointer"
             style={{
-                border: "1px solid var(--color-border)",
-                color: copied ? "var(--color-available)" : "var(--color-text-primary)",
+                color: copied ? "var(--color-available)" : undefined,
             }}
         >
-            {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+            {copied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
             {copied ? "Copied!" : offline ? `${ip} (offline)` : ip}
         </button>
     );
 }
 
-function ProjectSlide({ experience }) {
-    return (
-        <div className="flex items-center project-slide h-screen">
-            <motion.div
-                className="w-full max-w-xl"
-                initial={{ opacity: 0, filter: "blur(12px)", y: 20 }}
-                whileInView={{ opacity: 1, filter: "blur(0px)", y: 0 }}
-                viewport={{ margin: "-15%" }}
-                transition={{ duration: 0.9, ease: [0.25, 0.1, 0.25, 1] }}
-            >
-                <div className="flex items-center gap-5 mb-6">
-                    <img
-                        src={experience.image}
-                        alt={experience.title}
-                        className="w-16 h-16 md:w-20 md:h-20 rounded-2xl object-cover"
-                        style={{
-                            border: "1px solid var(--color-border)",
-                            boxShadow: "0 0 20px rgba(99, 102, 241, 0.1)",
-                        }}
-                    />
-                    <div>
-                        <h3 className="text-3xl md:text-4xl font-bold tracking-tight">
-                            {experience.title}
-                        </h3>
-                        <p className="text-sm font-medium" style={{ color: "var(--color-text-muted)" }}>
-                            {experience.role}
-                        </p>
-                    </div>
-                </div>
+function FeaturedCard({ experience }) {
+    const ref = useRef(null);
+    const isInView = useInView(ref, { once: false, margin: "-60px" });
 
-                <div className="flex items-center gap-4 mb-6">
-                    <span
-                        className="text-sm font-medium"
-                        style={{ color: "var(--color-text-secondary)" }}
-                    >
-                        {experience.startDate} — {experience.endDate}
-                    </span>
-                    {experience.ongoing && (
-                        <span
-                            className="text-xs px-2 py-0.5 rounded-full font-medium"
-                            style={{
-                                backgroundColor: "var(--color-accent-muted)",
-                                color: "var(--color-accent)",
-                            }}
-                        >
-                            Active
-                        </span>
-                    )}
-                </div>
-
-                <p
-                    className="text-base leading-relaxed mb-6 max-w-lg"
-                    style={{ color: "var(--color-text-secondary)" }}
-                >
-                    {experience.description}
-                </p>
-
-                {experience.players && (
-                    <div
-                        className="inline-flex items-center gap-2 mb-6 px-3 py-1.5 rounded-lg"
-                        style={{
-                            backgroundColor: "rgba(99, 102, 241, 0.08)",
-                            border: "1px solid rgba(99, 102, 241, 0.15)",
-                        }}
-                    >
-                        <Users className="w-4 h-4" style={{ color: "var(--color-accent)" }} />
-                        <span className="text-sm font-medium" style={{ color: "var(--color-text-secondary)" }}>
-                            {experience.players}
-                        </span>
-                    </div>
-                )}
-
-                <div className="flex flex-wrap items-center gap-3">
-                    <a
-                        href={experience.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-white/5 hover:border-[var(--color-border-hover)]"
-                        style={{
-                            border: "1px solid var(--color-border)",
-                            color: "var(--color-text-primary)",
-                        }}
-                    >
-                        <FaDiscord className="w-4 h-4" />
-                        Discord
-                    </a>
-                    {experience.website && (
-                        <a
-                            href={experience.website}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-white/5 hover:border-[var(--color-border-hover)]"
-                            style={{
-                                border: "1px solid var(--color-border)",
-                                color: "var(--color-text-primary)",
-                            }}
-                        >
-                            <ExternalLink className="w-4 h-4" />
-                            Website
-                        </a>
-                    )}
-                    <CopyIPButton ip={experience.ip} offline={experience.ipOffline} />
-                </div>
-            </motion.div>
-        </div>
-    );
-}
-
-function MobileProject({ experience, index }) {
     return (
         <motion.div
-            className="py-10 border-b"
-            style={{ borderColor: "var(--color-border)" }}
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ margin: "-10%" }}
-            transition={{ duration: 0.6, delay: index * 0.05, ease: [0.25, 0.1, 0.25, 1] }}
+            ref={ref}
+            initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
+            animate={isInView ? { opacity: 1, y: 0, filter: "blur(0px)" } : {}}
+            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+            className="col-span-full relative overflow-hidden group rounded-2xl project-card-featured"
+            style={{
+                background: "var(--color-surface)",
+                border: "1px solid var(--color-border)",
+            }}
         >
-            <div className="flex items-center gap-4 mb-4">
+            <div
+                className="absolute top-0 left-0 right-0 h-[2px]"
+                style={{
+                    background: "linear-gradient(90deg, transparent, var(--color-accent), transparent)",
+                }}
+            />
+
+            <div
+                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                style={{
+                    background: "radial-gradient(ellipse at 30% 50%, rgba(99,102,241,0.06) 0%, transparent 60%)",
+                }}
+            />
+
+            <div className="relative z-10 flex flex-col md:flex-row gap-8 items-start p-8 md:p-10">
                 <img
                     src={experience.image}
                     alt={experience.title}
-                    className="w-12 h-12 rounded-xl object-cover"
-                    style={{ border: "1px solid var(--color-border)" }}
+                    className="w-20 h-20 md:w-28 md:h-28 rounded-2xl object-cover flex-shrink-0"
+                    style={{
+                        border: "1px solid var(--color-border)",
+                        boxShadow: "var(--shadow-lg)",
+                    }}
                 />
-                <div>
-                    <h3 className="text-xl font-bold">{experience.title}</h3>
+
+                <div className="flex-1">
+                    <div className="flex flex-wrap items-center gap-2.5 mb-2">
+                        <h3 className="text-2xl md:text-3xl font-bold tracking-tight">
+                            {experience.title}
+                        </h3>
+                        <span
+                            className="text-[10px] px-2.5 py-1 rounded-full font-bold uppercase tracking-wider"
+                            style={{
+                                background: "linear-gradient(135deg, var(--color-accent), #8b5cf6)",
+                                color: "white",
+                            }}
+                        >
+                            Featured
+                        </span>
+                        {experience.ongoing && (
+                            <span className="relative flex items-center gap-1.5 text-[10px] px-2.5 py-1 rounded-full font-bold uppercase tracking-wider"
+                                style={{
+                                    backgroundColor: "rgba(34,197,94,0.1)",
+                                    color: "var(--color-available)",
+                                    border: "1px solid rgba(34,197,94,0.2)",
+                                }}
+                            >
+                                <span className="relative flex h-1.5 w-1.5">
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" style={{ backgroundColor: "var(--color-available)" }} />
+                                    <span className="relative inline-flex rounded-full h-1.5 w-1.5" style={{ backgroundColor: "var(--color-available)" }} />
+                                </span>
+                                Active
+                            </span>
+                        )}
+                    </div>
+                    <p className="text-sm font-medium mb-4" style={{ color: "var(--color-text-muted)" }}>
+                        {experience.role} &middot; {experience.startDate} &mdash; {experience.endDate}
+                    </p>
+                    <p
+                        className="text-base leading-relaxed mb-6 max-w-xl"
+                        style={{ color: "var(--color-text-secondary)" }}
+                    >
+                        {experience.description}
+                    </p>
+                    <div className="flex flex-wrap items-center gap-2.5">
+                        <a
+                            href={experience.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="project-link-btn inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium"
+                        >
+                            <FaDiscord className="w-4 h-4" />
+                            Discord
+                        </a>
+                        {experience.website && (
+                            <a
+                                href={experience.website}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="project-link-btn inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium"
+                            >
+                                <ArrowUpRight className="w-4 h-4" />
+                                Website
+                            </a>
+                        )}
+                        <CopyIPButton ip={experience.ip} offline={experience.ipOffline} />
+                    </div>
+                </div>
+            </div>
+        </motion.div>
+    );
+}
+
+function ProjectCard({ experience, index }) {
+    const ref = useRef(null);
+    const isInView = useInView(ref, { once: false, margin: "-60px" });
+
+    return (
+        <motion.div
+            ref={ref}
+            initial={{ opacity: 0, y: 25, filter: "blur(6px)" }}
+            animate={isInView ? { opacity: 1, y: 0, filter: "blur(0px)" } : {}}
+            transition={{ duration: 0.8, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
+            className="project-card rounded-2xl p-6 flex flex-col group relative overflow-hidden"
+            style={{
+                background: "var(--color-surface)",
+                border: "1px solid var(--color-border)",
+            }}
+        >
+            <div className="flex items-start gap-4 mb-4">
+                <img
+                    src={experience.image}
+                    alt={experience.title}
+                    className="w-14 h-14 rounded-xl object-cover flex-shrink-0"
+                    style={{
+                        border: "1px solid var(--color-border)",
+                        boxShadow: "var(--shadow-md)",
+                    }}
+                />
+                <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-0.5">
+                        <h3 className="text-lg font-bold tracking-tight truncate">
+                            {experience.title}
+                        </h3>
+                        {experience.ongoing && (
+                            <span className="relative flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full font-semibold flex-shrink-0"
+                                style={{
+                                    backgroundColor: "rgba(34,197,94,0.1)",
+                                    color: "var(--color-available)",
+                                }}
+                            >
+                                <span className="relative flex h-1.5 w-1.5">
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" style={{ backgroundColor: "var(--color-available)" }} />
+                                    <span className="relative inline-flex rounded-full h-1.5 w-1.5" style={{ backgroundColor: "var(--color-available)" }} />
+                                </span>
+                                Active
+                            </span>
+                        )}
+                    </div>
                     <p className="text-xs" style={{ color: "var(--color-text-muted)" }}>
-                        {experience.role} · {experience.startDate} — {experience.endDate}
+                        {experience.role} &middot; {experience.startDate} &mdash; {experience.endDate}
                     </p>
                 </div>
-                {experience.ongoing && (
-                    <span
-                        className="text-xs px-2 py-0.5 rounded-full font-medium ml-auto"
-                        style={{
-                            backgroundColor: "var(--color-accent-muted)",
-                            color: "var(--color-accent)",
-                        }}
-                    >
-                        Active
-                    </span>
-                )}
             </div>
 
             <p
-                className="text-sm leading-relaxed mb-4"
+                className="text-sm leading-relaxed mb-5 flex-1"
                 style={{ color: "var(--color-text-secondary)" }}
             >
                 {experience.description}
             </p>
 
             {experience.players && (
-                <p className="text-xs mb-4" style={{ color: "var(--color-text-muted)" }}>
-                    {experience.players}
-                </p>
+                <div className="inline-flex items-center gap-1.5 mb-4 px-2.5 py-1 rounded-lg self-start"
+                    style={{ backgroundColor: "var(--color-accent-muted)" }}
+                >
+                    <Users className="w-3.5 h-3.5" style={{ color: "var(--color-accent)" }} />
+                    <span className="text-xs font-medium" style={{ color: "var(--color-text-secondary)" }}>
+                        {experience.players}
+                    </span>
+                </div>
             )}
 
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap items-center gap-2 mt-auto">
                 <a
                     href={experience.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium"
-                    style={{ border: "1px solid var(--color-border)", color: "var(--color-text-secondary)" }}
+                    className="project-link-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium"
                 >
-                    <FaDiscord className="w-3 h-3" />
+                    <FaDiscord className="w-3.5 h-3.5" />
                     Discord
                 </a>
                 {experience.website && (
@@ -299,10 +313,9 @@ function MobileProject({ experience, index }) {
                         href={experience.website}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium"
-                        style={{ border: "1px solid var(--color-border)", color: "var(--color-text-secondary)" }}
+                        className="project-link-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium"
                     >
-                        <ExternalLink className="w-3 h-3" />
+                        <ExternalLink className="w-3.5 h-3.5" />
                         Website
                     </a>
                 )}
@@ -313,149 +326,37 @@ function MobileProject({ experience, index }) {
 }
 
 export default function Experience() {
-    const sectionRef = useRef(null);
-    const leftColRef = useRef(null);
-    const progressRef = useRef(null);
-    const [activeIndex, setActiveIndex] = useState(0);
-    const [isMobile, setIsMobile] = useState(false);
     const headerRef = useRef(null);
-    const isHeaderInView = useInView(headerRef, { once: true });
+    const isHeaderInView = useInView(headerRef, { once: false });
 
-    useEffect(() => {
-        const checkMobile = () => setIsMobile(window.innerWidth < 1024);
-        checkMobile();
-        window.addEventListener("resize", checkMobile);
-        return () => window.removeEventListener("resize", checkMobile);
-    }, []);
-
-    useEffect(() => {
-        if (isMobile) return;
-
-        const section = sectionRef.current;
-        const slides = section.querySelectorAll(".project-slide");
-
-        const pinTrigger = ScrollTrigger.create({
-            trigger: section,
-            start: "top top",
-            end: "bottom bottom",
-            pin: leftColRef.current,
-            pinSpacing: false,
-            pinType: "transform",
-        });
-
-        const progressTween = gsap.to(progressRef.current, {
-            scaleY: 1,
-            ease: "none",
-            scrollTrigger: {
-                trigger: section,
-                start: "top top",
-                end: "bottom bottom",
-                scrub: true,
-            },
-        });
-
-        const slideTriggers = [];
-        slides.forEach((slide, index) => {
-            slideTriggers.push(
-                ScrollTrigger.create({
-                    trigger: slide,
-                    start: "top center",
-                    end: "bottom center",
-                    onEnter: () => setActiveIndex(index),
-                    onEnterBack: () => setActiveIndex(index),
-                })
-            );
-        });
-
-        return () => {
-            pinTrigger.kill();
-            progressTween.scrollTrigger?.kill();
-            progressTween.kill();
-            slideTriggers.forEach((st) => st.kill());
-        };
-    }, [isMobile]);
-
-    if (isMobile) {
-        return (
-            <section id="experience" className="py-20 px-8">
-                <div className="max-w-2xl mx-auto">
-                    <motion.h2
-                        ref={headerRef}
-                        initial={{ opacity: 0, y: 30 }}
-                        animate={isHeaderInView ? { opacity: 1, y: 0 } : {}}
-                        transition={{ duration: 0.6 }}
-                        className="text-4xl font-black tracking-tight mb-2"
-                    >
-                        Experience
-                    </motion.h2>
-                    <motion.p
-                        initial={{ opacity: 0 }}
-                        animate={isHeaderInView ? { opacity: 1 } : {}}
-                        transition={{ duration: 0.6, delay: 0.2 }}
-                        className="text-sm mb-8"
-                        style={{ color: "var(--color-text-muted)" }}
-                    >
-                        {String(experiences.length).padStart(2, "0")} projects
-                    </motion.p>
-                    {experiences.map((exp, i) => (
-                        <MobileProject key={exp.title} experience={exp} index={i} />
-                    ))}
-                </div>
-            </section>
-        );
-    }
+    const featured = experiences.filter((e) => e.featured);
+    const rest = experiences.filter((e) => !e.featured);
 
     return (
-        <section
-            id="experience"
-            ref={sectionRef}
-            className="relative px-8 lg:px-16"
-            style={{ height: `${experiences.length * 100}vh` }}
-        >
-            <div className="max-w-7xl mx-auto h-full relative">
-                <div className="flex h-full">
-                    <div
-                        ref={leftColRef}
-                        className="w-[30%] flex-shrink-0 h-screen flex flex-col justify-center pr-12"
-                    >
-                        <h2 className="text-5xl md:text-6xl font-black tracking-tight mb-8">
-                            Experience
-                        </h2>
+        <section id="experience" className="py-24 px-6 lg:px-8">
+            <div className="max-w-7xl mx-auto">
+                <motion.div
+                    ref={headerRef}
+                    initial={{ opacity: 0, y: 20, filter: "blur(8px)" }}
+                    animate={isHeaderInView ? { opacity: 1, y: 0, filter: "blur(0px)" } : {}}
+                    transition={{ duration: 0.6 }}
+                    className="mb-12"
+                >
+                    <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-2">
+                        Selected Projects
+                    </h2>
+                    <p className="text-sm max-w-md" style={{ color: "var(--color-text-muted)" }}>
+                        A few highlights from my recent work. I've contributed to many more projects over the years.
+                    </p>
+                </motion.div>
 
-                        <div className="flex items-center gap-4 mb-8">
-                            <span className="text-4xl font-black" style={{ color: "var(--color-text-primary)" }}>
-                                {String(activeIndex + 1).padStart(2, "0")}
-                            </span>
-                            <span className="text-sm" style={{ color: "var(--color-text-muted)" }}>
-                                / {String(experiences.length).padStart(2, "0")}
-                            </span>
-                        </div>
-
-                        <div
-                            className="w-px h-32 relative overflow-hidden"
-                            style={{ backgroundColor: "var(--color-border)" }}
-                        >
-                            <div
-                                ref={progressRef}
-                                className="absolute top-0 left-0 w-full origin-top"
-                                style={{
-                                    backgroundColor: "var(--color-accent)",
-                                    height: "100%",
-                                    transform: "scaleY(0)",
-                                    boxShadow: "0 0 8px rgba(99, 102, 241, 0.4)",
-                                }}
-                            />
-                        </div>
-                    </div>
-
-                    <div className="w-[70%] flex-shrink-0">
-                        {experiences.map((exp) => (
-                            <ProjectSlide
-                                key={exp.title}
-                                experience={exp}
-                            />
-                        ))}
-                    </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {featured.map((exp) => (
+                        <FeaturedCard key={exp.title} experience={exp} />
+                    ))}
+                    {rest.map((exp, i) => (
+                        <ProjectCard key={exp.title} experience={exp} index={i} />
+                    ))}
                 </div>
             </div>
         </section>
