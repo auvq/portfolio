@@ -11,7 +11,7 @@ function RobotMessage() {
             initial={{ opacity: 0, scale: 0.8, y: 10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 2.0, type: "spring", stiffness: 300, damping: 22 }}
-            className="absolute top-[20%] right-[22%] hidden lg:block pointer-events-none z-20"
+            className="absolute top-[28%] right-[24%] hidden lg:block pointer-events-none z-20"
         >
             <div
                 style={{ animation: "bubble-float 4s ease-in-out infinite" }}
