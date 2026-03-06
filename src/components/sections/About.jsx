@@ -186,7 +186,7 @@ export default function About() {
     const isInView = useInView(ref, { once: false, margin: "-80px" });
 
     return (
-        <section className="py-24 px-6 lg:px-8">
+        <section id="about" className="py-24 px-6 lg:px-8" style={{ scrollMarginTop: "-100px" }}>
             <div className="max-w-7xl mx-auto" ref={ref}>
                 <motion.div
                     initial={{ opacity: 0, y: 20, filter: "blur(8px)" }}
