@@ -191,7 +191,7 @@ function FeaturedCard({ experience }) {
                         )}
                     </div>
                     <p className="text-sm font-medium mb-4" style={{ color: "var(--color-text-muted)" }}>
-                        {experience.role} &middot; {experience.startDate} &mdash; {experience.endDate}
+                        {experience.role} &middot; {experience.startDate} - {experience.endDate}
                     </p>
                     <p
                         className="text-base leading-relaxed mb-6 max-w-xl"
@@ -275,7 +275,7 @@ function ProjectCard({ experience, index }) {
                         )}
                     </div>
                     <p className="text-xs" style={{ color: "var(--color-text-muted)" }}>
-                        {experience.role} &middot; {experience.startDate} &mdash; {experience.endDate}
+                        {experience.role} &middot; {experience.startDate} - {experience.endDate}
                     </p>
                 </div>
             </div>

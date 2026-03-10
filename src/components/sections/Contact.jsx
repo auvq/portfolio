@@ -92,7 +92,7 @@ export default function Contact() {
                                         className="text-xs"
                                         style={{ color: "var(--color-text-muted)" }}
                                     >
-                                        Preferred — responds within 24h
+                                        Preferred - responds within 24h
                                     </span>
                                 </div>
                                 <div className="ml-auto flex items-center gap-1.5">
