@@ -1,7 +1,6 @@
 import { useState, useEffect, Suspense, lazy } from "react";
 import { motion } from "framer-motion";
 import { Github, ChevronRight } from "lucide-react";
-import { FaDiscord } from "react-icons/fa";
 
 const Spline = lazy(() => import("@splinetool/react-spline"));
 
@@ -222,11 +221,12 @@ export default function Hero() {
                         }}
                         whileHover={{ scale: 1.03 }}
                         whileTap={{ scale: 0.97 }}
-                        className="btn-primary inline-flex items-center justify-center gap-2.5 group"
+                        className="hero-cta-btn inline-flex items-center justify-center gap-2.5 group font-semibold rounded-xl px-7 py-3.5 text-sm"
                     >
-                        <FaDiscord className="w-4 h-4" />
-                        Get in Touch
-                        <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                        <span className="relative z-10 inline-flex items-center gap-2.5">
+                            Get in Touch
+                            <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                        </span>
                     </motion.a>
                     <motion.a
                         href="https://github.com/auvq"
